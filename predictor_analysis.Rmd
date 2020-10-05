@@ -1,0 +1,100 @@
+---
+title: "Predictor Analysis (DCD)"
+knit: (function(input_file, encoding) {
+  out_dir <- 'docs';
+  rmarkdown::render(input_file,
+ encoding=encoding,
+ output_file=file.path(dirname(input_file), out_dir, 'predictor_analysis.html'))})
+author: "Tuomas Eerola"
+date: "05/10/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Read data
+
+```{r }
+corpus <- read.csv('data/DCD_predictors.csv') # Load predictors csv data
+print(dim(corpus))
+```
+
+## Determine the number of clusters in the predictors
+
+Determine what is the optimal number of clusters in the data (for predictors, not observations).
+
+```{r warning=FALSE,message=FALSE}
+## Load libraries
+library("factoextra")  # Load library
+library("cluster")
+
+## Prepare a correlation matrix
+df <- cor(corpus[,6:dim(corpus)[2]], method = "pearson") # Eliminate first 5 columns (meta-data)
+
+## Determine the optimal number of clusters using Tibshirani method
+set.seed(125)
+gap_stat <- clusGap(df, FUN = kmeans, K.max = 10, B = 1000,verbose=FALSE)
+print(gap_stat, method = "Tibs2001SEmax")# 4
+print(gap_stat, method = "firstSEmax")   # 4
+fviz_gap_stat(gap_stat, maxSE = list(method = "Tibs2001SEmax")) # 4
+fviz_gap_stat(gap_stat, maxSE = list(method = "firstSEmax")) # 4
+```
+
+## Visualise predictor correlations and clusters
+
+```{r warning=FALSE,message=FALSE}
+library("pheatmap")
+
+## Rename variables for clarity
+rownames(df)[rownames(df)=='har_18_harmonicity']<-"Harr18"
+rownames(df)[rownames(df)=='milne_13_harmonicity']<-"Miln13"
+rownames(df)[rownames(df)=='parn_88_root_ambig']<-"Parn88"
+rownames(df)[rownames(df)=='parn_94_complex']<-"Parn94"
+rownames(df)[rownames(df)=='bowl_18_min_freq_dist']<-"Bowl18"
+rownames(df)[rownames(df)=='hutch_78_roughness']<-"Hutc78"
+rownames(df)[rownames(df)=='seth_93_roughness']<-"Seth93"
+rownames(df)[rownames(df)=='vass_01_roughness']<-"Vass01"
+rownames(df)[rownames(df)=='wang_13_roughness']<-"Wang13"
+rownames(df)[rownames(df)=='har_19_corpus']<-"Harr19"
+rownames(df)[rownames(df)=='neg_log_prob']<-"CorpPop"
+rownames(df)[rownames(df)=='neg_log_prob_J']<-"CorpJazz"
+rownames(df)[rownames(df)=='neg_log_prob_C']<-"CorpClas"
+rownames(df)[rownames(df)=='sharpness']<-"SpecSharp"
+rownames(df)[rownames(df)=='brightness']<-"SpecRolloff"
+rownames(df)[rownames(df)=='spectralfluxSD']<-"SpecFlux"
+rownames(df)[rownames(df)=='keyclarity']<-"KeyClar"
+rownames(df)[rownames(df)=='spectralcentroid']<-"SpecCentr"
+rownames(df)[rownames(df)=='irregularity']<-"SpecIrreg"
+rownames(df)[rownames(df)=='TDL']<-"TonDiss"
+
+colnames(df)<-rownames(df)
+
+cat_df<-data.frame("Category" = c(
+  rep("Harmonicity",5),
+  rep("Roughess",4),
+  rep("Familiarity",1), 
+  rep("Sharpness",5),
+  rep("Familiarity",5))) # was 1 before jl 1-3
+rownames(cat_df) = colnames(df)
+
+# Create plot
+fig<-pheatmap(
+  df,
+  display_numbers = TRUE,
+  fontsize_number=5,
+  cutree_rows = 4,
+  cutree_cols = 4,
+  treeheight_row = 80,
+  treeheight_col = 80,
+  legend = FALSE,
+  clustering_method = 'ward.D2',
+  annotation_col = cat_df,
+  annotation_row = cat_df,
+  annotation_legend = TRUE,
+  annotation_names_col = TRUE
+#  cellheight= 20, 
+#  cellwidth = 20
+)
+```
