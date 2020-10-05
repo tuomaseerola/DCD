@@ -5,7 +5,7 @@ This is a datasets of chords, to be precise, it consists of 2, 3, 4, 5, 6 pitch 
 We have created this dataset to explore the questions related to consonance and dissonance and the musical and acoustical correlates of this concept.
 
 ### Audio files
-All pitch combinations have been created using the piano timbre, with _Ableton Live 9_ (a music sequencer software), using the _Synthogy Ivory Grand Pianos II plug-in_. The applied sound font was _Steinway D Concert Grand_. No reverb was used, and the intervals and chords had a fixed velocity (65). The sound examples are available as audio files (mp3) in OSF repository (`audio.zip`).
+All pitch combinations have been created using the piano timbre, with _Ableton Live 9_ (a music sequencer software), using the _Synthogy Ivory Grand Pianos II plug-in_. The applied sound font was _Steinway D Concert Grand_. No reverb was used, and the intervals and chords had a fixed velocity (65). The sound examples are available as audio files (mp3) in OSF repository [https://osf.io/4t9fm/](https://osf.io/4t9fm/), see file `audio.zip`.
 
 ### Calculated descriptors
 
