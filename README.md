@@ -11,6 +11,8 @@ All pitch combinations have been created using the piano timbre, with _Ableton L
 
 `DCD_predictors.csv` is comma-separated text file containing 26 descriptors for each chord with a header (see `data` folder). The chords are ordered in rows and there are 26 predictors in columns. Most of the predictors have been calculated using the models available in the `incon` library (Harrison and Pearce, 2020). Some of them (`CorpPop`, `CorpJazz`, `CorpClas`) are new variants of the `har_19_corpus` and five predictors (`SpecSharp`,`SpecRolloff`, `SpecFlux`,`SpecCentr`, and `SpecIrreg`) have been calculated from the audio files using MIR Toolbox (Lartillot & Toiviainen, 2007). Most of the columns are integers (`int`) but the five first ones are strings (`str`).
 
+`DCD_predictors.csv` is comma-separated text file containing 27 descriptors for each chord with a header. The chords are ordered in rows and there are 27 predictors in columns. Most of the predictors have been calculated using the models available in the `incon` library (Harrison and Pearce, 2020). Some of them (`CorpPop`, `CorpJazz`, `CorpClas`) are new variants of the `har_19_corpus` and five predictors (`SpecSharp`,`SpecRolloff`, `SpecFlux`,`SpecCentr`, and `SpecIrreg`) have been calculated from the audio files using MIR Toolbox (Lartillot & Toiviainen, 2007). Most of the columns are integers (`int`) but the five first ones are strings (`str`).
+
 |Name                    |Type   |Description                                          |
 |:-----------------------|:------|:----------------------------------------------------|
 |"id"                    |str    | Running number, `0001`, `0002`                      |
@@ -18,6 +20,8 @@ All pitch combinations have been created using the piano timbre, with _Ableton L
 |"numtones"              |str    | Number of pitches in the chord (from 2 to 6)        |
 |"midi"                  |str    | Pitch in MIDI standard, e.g., "52-53" for a semitone|
 |"forte"                 |str    | Classification of the chord in Forte system         |
+|"gill_09_harmonicity"   |int    | Harmonicity (Gill and Purves, 2009)|
+|"stolz_15_periodicity"  |int    | Harmonicity (Stolzenburg, 2015)|
 |"har_18_harmonicity"    |int    | Harmonicity (Harrison and Pearce, 2018)|
 |"milne_13_harmonicity"  |int    | Harmonicity (Milne et al., 2013)|
 |"parn_88_root_ambig"    |int    | Harmonicity (Parncutt et al., 1988)|
@@ -30,12 +34,12 @@ All pitch combinations have been created using the piano timbre, with _Ableton L
 |"har_19_corpus"         |int    | Familiarity (Harrison and Pearce, 2019)|
 |"SpecSharp"             |int    | Sharpness (Zwicker & Fastl, 1990)|
 |"SpecRolloff"           |int    | Spectral Roll-off|
-|"SpecFlux"              |int    | Spectral Flux|
+|"SpecFlux"              |int    | Spectral Flux (standard deviation of the change across successive 20 ms frames)|
 |"SpecCentr"             |int    | Spectral Centroid |
 |"SpecIrreg"             |int    | Spectral Irregularity (Jensen, 1991)|
 |"KeyClar"               |int    | Familiarity (Krumhansl, 1990)|
-|"CorpPop"               |int    | Familiarity (Eerola and Lahdelma, 2020)|
-|"CorpJazz"              |int    | Familiarity (Eerola and Lahdelma, 2020)|
-|"CorpClas"              |int    | Familiarity (Eerola and Lahdelma, 2020)|
-|"TonDiss"               |int    | Tonal Dissonance (Eerola and Lahdelma, 2020)|
+|"CorpPop"               |int    | Familiarity (Eerola and Lahdelma, 2021)|
+|"CorpJazz"              |int    | Familiarity (Eerola and Lahdelma, 2021)|
+|"CorpClas"              |int    | Familiarity (Eerola and Lahdelma, 2021)|
+|"TonDiss"               |int    | Tonal Dissonance (Eerola and Lahdelma, 2021, based on Johnson-Laird et al., 2012)|
 

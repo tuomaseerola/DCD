@@ -6,7 +6,7 @@ knit: (function(input_file, encoding) {
  encoding=encoding,
  output_file=file.path(dirname(input_file), out_dir, 'predictor_analysis.html'))})
 author: "Tuomas Eerola"
-date: "05/10/2020"
+date: "05/04/2021"
 output: html_document
 ---
 
@@ -33,21 +33,23 @@ library("cluster")
 ## Prepare a correlation matrix
 df <- cor(corpus[,6:dim(corpus)[2]], method = "pearson") # Eliminate first 5 columns (meta-data)
 
-## Determine the optimal number of clusters using Tibshirani method
-set.seed(125)
-gap_stat <- clusGap(df, FUN = kmeans, K.max = 10, B = 1000,verbose=FALSE)
-print(gap_stat, method = "Tibs2001SEmax")# 4
-print(gap_stat, method = "firstSEmax")   # 4
-fviz_gap_stat(gap_stat, maxSE = list(method = "Tibs2001SEmax")) # 4
-fviz_gap_stat(gap_stat, maxSE = list(method = "firstSEmax")) # 4
+## Determine the number of clusters via hierarchical clustering
+set.seed(123)
+df.dist <- (1 - df)
+gap_stat <- clusGap(df.dist,FUN = hcut, K.max = 10,B = 1000)
+
+# Plot gap statistic
+print(fviz_gap_stat(gap_stat, maxSE = list(method = "Tibs2001SEmax"))) # 4
 ```
 
 ## Visualise predictor correlations and clusters
 
-```{r warning=FALSE,message=FALSE}
+```{r warning=FALSE,message=FALSE,fig.width=10,fig.height=10}
 library("pheatmap")
 
 ## Rename variables for clarity
+rownames(df)[rownames(df)=='gill_09_harmonicity']<-"Gill09"
+rownames(df)[rownames(df)=='stolz_15_periodicity']<-"Stol15"
 rownames(df)[rownames(df)=='har_18_harmonicity']<-"Harr18"
 rownames(df)[rownames(df)=='milne_13_harmonicity']<-"Miln13"
 rownames(df)[rownames(df)=='parn_88_root_ambig']<-"Parn88"
@@ -71,30 +73,38 @@ rownames(df)[rownames(df)=='TDL']<-"TonDiss"
 
 colnames(df)<-rownames(df)
 
-cat_df<-data.frame("Category" = c(
-  rep("Harmonicity",5),
-  rep("Roughess",4),
+cat_df <- data.frame("Category" = c(
+  rep("Harmonicity",7), 
+  rep("Roughness",4),
   rep("Familiarity",1), 
-  rep("Sharpness",5),
-  rep("Familiarity",5))) # was 1 before jl 1-3
+  rep("Spectral Env.",5),
+  rep("Familiarity",5))) 
 rownames(cat_df) = colnames(df)
+cat_df
+
 
 # Create plot
+
 fig<-pheatmap(
   df,
   display_numbers = TRUE,
   fontsize_number=5,
-  cutree_rows = 4,
-  cutree_cols = 4,
-  treeheight_row = 80,
-  treeheight_col = 80,
+ cutree_rows = 4,
+ cutree_cols = 4,
+  cluster_cols = TRUE,
+  cluster_rows = TRUE,
+  treeheight_row = 50,
+  treeheight_col = 50,
   legend = FALSE,
-  clustering_method = 'ward.D2',
+  clustering_distance_cols = "correlation",
+  clustering_distance_rows = "correlation",
+  clustering_method = 'ward.D2', # was ward.D2
   annotation_col = cat_df,
   annotation_row = cat_df,
   annotation_legend = TRUE,
-  annotation_names_col = TRUE
-#  cellheight= 20, 
-#  cellwidth = 20
+  annotation_names_col = TRUE,
+  cellheight= 20, 
+  cellwidth = 20
 )
+
 ```
